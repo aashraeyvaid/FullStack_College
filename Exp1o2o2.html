@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Product Filter & Sort</title>
+
+<style>
+  :root {
+    --primary: #4f46e5;
+    --bg: #f9fafb;
+    --card: #ffffff;
+    --text: #111827;
+    --muted: #6b7280;
+  }
+
+  * {
+    box-sizing: border-box;
+    font-family: system-ui, sans-serif;
+  }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    padding: 1.5rem;
+  }
+
+  .wrapper {
+    max-width: 1000px;
+    margin: auto;
+  }
+
+  .controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .controls h2 {
+    margin: 0;
+    color: var(--text);
+  }
+
+  select {
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    border: 2px solid #e5e7eb;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+
+  .products {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.2rem;
+  }
+
+  .card {
+    background: var(--card);
+    padding: 1rem;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+    transition: transform 0.3s ease, opacity 0.3s ease;
+  }
+
+  .card:hover {
+    transform: translateY(-5px);
+  }
+
+  .card h3 {
+    margin: 0 0 0.25rem;
+    color: var(--text);
+  }
+
+  .price {
+    font-weight: 600;
+    color: var(--primary);
+  }
+
+  .category {
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+
+  .fade {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+</style>
+</head>
+
+<body>
+
+<div class="wrapper">
+  <div class="controls">
+    <h2>Products</h2>
+    <select id="sortSelect">
+      <option value="default">Sort By</option>
+      <option value="price-asc">Price: Low → High</option>
+      <option value="price-desc">Price: High → Low</option>
+      <option value="name">Name (A–Z)</option>
+    </select>
+  </div>
+
+  <div class="products" id="productGrid"></div>
+</div>
+
+<script>
+  const products = [
+    { name: "Wireless Mouse", price: 899, category: "Electronics" },
+    { name: "Bluetooth Headphones", price: 1999, category: "Electronics" },
+    { name: "Notebook", price: 199, category: "Stationery" },
+    { name: "Backpack", price: 1499, category: "Accessories" },
+    { name: "Smart Watch", price: 3499, category: "Electronics" },
+    { name: "Water Bottle", price: 499, category: "Accessories" }
+  ];
+
+  const grid = document.getElementById("productGrid");
+  const sortSelect = document.getElementById("sortSelect");
+
+  function renderProducts(list) {
+    grid.innerHTML = "";
+
+    list.forEach(product => {
+      const card = document.createElement("div");
+      card.className = "card fade";
+
+      card.innerHTML = `
+        <h3>${product.name}</h3>
+        <div class="price">₹${product.price}</div>
+        <div class="category">${product.category}</div>
+      `;
+
+      grid.appendChild(card);
+
+      requestAnimationFrame(() => {
+        card.classList.remove("fade");
+      });
+    });
+  }
+
+  sortSelect.addEventListener("change", () => {
+    let sorted = [...products];
+
+    switch (sortSelect.value) {
+      case "price-asc":
+        sorted.sort((a, b) => a.price - b.price);
+        break;
+      case "price-desc":
+        sorted.sort((a, b) => b.price - a.price);
+        break;
+      case "name":
+        sorted.sort((a, b) => a.name.localeCompare(b.name));
+        break;
+    }
+
+    renderProducts(sorted);
+  });
+
+  renderProducts(products);
+</script>
+
+</body>
+</html>

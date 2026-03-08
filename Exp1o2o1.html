@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Live Character Counter</title>
+
+<style>
+  :root {
+    --primary: #4f46e5;
+    --warning: #f59e0b;
+    --danger: #ef4444;
+    --bg: #f9fafb;
+  }
+
+  * {
+    box-sizing: border-box;
+    font-family: system-ui, sans-serif;
+  }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .container {
+    width: 100%;
+    max-width: 420px;
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+  }
+
+  label {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+
+  textarea {
+    width: 100%;
+    min-height: 120px;
+    padding: 0.75rem;
+    resize: none;
+    border-radius: 8px;
+    border: 2px solid #e5e7eb;
+    outline: none;
+    font-size: 1rem;
+    transition: border-color 0.2s;
+  }
+
+  textarea:focus {
+    border-color: var(--primary);
+  }
+
+  .counter {
+    margin-top: 0.5rem;
+    text-align: right;
+    font-size: 0.9rem;
+    color: #6b7280;
+    transition: color 0.2s;
+  }
+
+  .counter.warning {
+    color: var(--warning);
+  }
+
+  .counter.danger {
+    color: var(--danger);
+  }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <label for="message">Your Message</label>
+  <textarea id="message" placeholder="Type something..."></textarea>
+
+  <div class="counter" id="counter">
+    <span id="charCount">0</span> / <span id="maxCount">150</span>
+  </div>
+</div>
+
+<script>
+  const textarea = document.getElementById("message");
+  const charCount = document.getElementById("charCount");
+  const maxCount = document.getElementById("maxCount");
+  const counter = document.getElementById("counter");
+
+  const MAX_CHARS = 150;
+  maxCount.textContent = MAX_CHARS;
+
+  textarea.addEventListener("input", () => {
+    let length = textarea.value.length;
+
+    if (length > MAX_CHARS) {
+      textarea.value = textarea.value.slice(0, MAX_CHARS);
+      length = MAX_CHARS;
+    }
+
+    charCount.textContent = length;
+
+    counter.classList.remove("warning", "danger");
+
+    if (length >= MAX_CHARS) {
+      counter.classList.add("danger");
+    } else if (length >= MAX_CHARS * 0.8) {
+      counter.classList.add("warning");
+    }
+  });
+</script>
+
+</body>
+</html>
